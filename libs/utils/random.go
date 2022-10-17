@@ -13,7 +13,7 @@ var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 var digitRunes = []rune("0123456789")
 
 func GetRandomGenerator() *RandomGenerator {
-	if randomGenerator != nil {
+	if randomGenerator == nil {
 		rand.Seed(time.Now().UnixNano())
 		randomGenerator = &RandomGenerator{}
 	}
