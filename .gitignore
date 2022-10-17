@@ -1,1 +1,2 @@
 infrastructure/db/data/**
+infrastructure/kafka/data/**
