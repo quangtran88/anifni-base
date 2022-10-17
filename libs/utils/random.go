@@ -8,16 +8,16 @@ import (
 type RandomGenerator struct {
 }
 
-var generator *RandomGenerator
+var randomGenerator *RandomGenerator
 var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 var digitRunes = []rune("0123456789")
 
 func GetRandomGenerator() *RandomGenerator {
-	if generator != nil {
+	if randomGenerator != nil {
 		rand.Seed(time.Now().UnixNano())
-		generator = &RandomGenerator{}
+		randomGenerator = &RandomGenerator{}
 	}
-	return generator
+	return randomGenerator
 }
 
 func (g RandomGenerator) GetInt(min, max int) int {

@@ -1,8 +1,19 @@
 package baseUtils
 
-import "golang.org/x/crypto/bcrypt"
+import (
+	"golang.org/x/crypto/bcrypt"
+)
 
 type HashGenerator struct {
+}
+
+var hashGenerator *HashGenerator
+
+func GetHashGenerator() *HashGenerator {
+	if randomGenerator != nil {
+		hashGenerator = &HashGenerator{}
+	}
+	return hashGenerator
 }
 
 func (h HashGenerator) HashPassword(password string) (string, error) {
