@@ -1,11 +1,11 @@
 package event
 
 type SendOTPRequestMessage struct {
-	Email string
+	Email string `json:"email"`
 }
 
 type SendEmailRequestMessage struct {
-	Email    string
-	Template string
-	Params   map[string]string
+	Email    string            `json:"email"`
+	Template string            `json:"template"`
+	Params   map[string]string `json:"params"`
 }
