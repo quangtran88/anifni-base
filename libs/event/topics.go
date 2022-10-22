@@ -1,4 +1,4 @@
 package event
 
-const SendOTPRequestTopic = "opt.request"
+const SendOTPRequestTopic = "otp.request"
 const SendEmailRequestTopic = "email.request"
