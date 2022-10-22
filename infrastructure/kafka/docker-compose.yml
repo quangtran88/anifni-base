@@ -69,56 +69,56 @@ services:
     depends_on:
       - zoo1
 
-  schema-registry:
-    image: confluentinc/cp-schema-registry:6.1.0
-    container_name: schema-registry
-    ports:
-      - 8081:8081
-    depends_on:
-      - kafka1
-      - kafka2
-      - kafka3
-    environment:
-      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka1:29092,kafka2:29093,kafka3:29094
+  # schema-registry:
+  #   image: confluentinc/cp-schema-registry:6.1.0
+  #   container_name: schema-registry
+  #   ports:
+  #     - 8081:8081
+  #   depends_on:
+  #     - kafka1
+  #     - kafka2
+  #     - kafka3
+  #   environment:
+  #     SCHEMA_REGISTRY_HOST_NAME: schema-registry
+  #     SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka1:29092,kafka2:29093,kafka3:29094
 
-  kafka-connect:
-    image: confluentinc/cp-kafka-connect-base:6.1.0
-    container_name: kafka-connect
-    depends_on:
-      - kafka1
-      - kafka2
-      - kafka3
-      - schema-registry
-    ports:
-      - 8083:8083
-    environment:
-      CONNECT_BOOTSTRAP_SERVERS: "kafka1:29092,kafka2:29093,kafka3:29094"
-      CONNECT_REST_PORT: 8083
-      CONNECT_GROUP_ID: kafka-connect
-      CONNECT_CONFIG_STORAGE_TOPIC: _connect-configs
-      CONNECT_OFFSET_STORAGE_TOPIC: _connect-offsets
-      CONNECT_STATUS_STORAGE_TOPIC: _connect-status
-      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
-      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
-      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
-      CONNECT_REST_ADVERTISED_HOST_NAME: "kafka-connect"
-      CONNECT_LOG4J_APPENDER_STDOUT_LAYOUT_CONVERSIONPATTERN: "[%d] %p %X{connector.context}%m (%c:%L)%n"
-      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
-      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
-      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
-    # In the command section, $ are replaced with $$ to avoid the error 'Invalid interpolation format for "command" option'
-    command:
-      - bash
-      - -c
-      - |
-        echo "Installing Connector"
-        confluent-hub install --no-prompt debezium/debezium-connector-mysql:latest
-        #
-        echo "Launching Kafka Connect worker"
-        /etc/confluent/docker/run &
-        #
-        sleep infinity
+  # kafka-connect:
+  #   image: confluentinc/cp-kafka-connect-base:6.1.0
+  #   container_name: kafka-connect
+  #   depends_on:
+  #     - kafka1
+  #     - kafka2
+  #     - kafka3
+  #     - schema-registry
+  #   ports:
+  #     - 8083:8083
+  #   environment:
+  #     CONNECT_BOOTSTRAP_SERVERS: "kafka1:29092,kafka2:29093,kafka3:29094"
+  #     CONNECT_REST_PORT: 8083
+  #     CONNECT_GROUP_ID: kafka-connect
+  #     CONNECT_CONFIG_STORAGE_TOPIC: _connect-configs
+  #     CONNECT_OFFSET_STORAGE_TOPIC: _connect-offsets
+  #     CONNECT_STATUS_STORAGE_TOPIC: _connect-status
+  #     CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+  #     CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+  #     CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+  #     CONNECT_REST_ADVERTISED_HOST_NAME: "kafka-connect"
+  #     CONNECT_LOG4J_APPENDER_STDOUT_LAYOUT_CONVERSIONPATTERN: "[%d] %p %X{connector.context}%m (%c:%L)%n"
+  #     CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
+  #     CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
+  #     CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
+  #   # In the command section, $ are replaced with $$ to avoid the error 'Invalid interpolation format for "command" option'
+  #   command:
+  #     - bash
+  #     - -c
+  #     - |
+  #       echo "Installing Connector"
+  #       confluent-hub install --no-prompt debezium/debezium-connector-mysql:latest
+  #       #
+  #       echo "Launching Kafka Connect worker"
+  #       /etc/confluent/docker/run &
+  #       #
+  #       sleep infinity
 
   kafka-ui:
     container_name: kafka-ui
@@ -130,13 +130,13 @@ services:
       - kafka1
       - kafka2
       - kafka3
-      - schema-registry
-      - kafka-connect
+      # - schema-registry
+      # - kafka-connect
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:29092,kafka2:29093,kafka3:29094
       KAFKA_CLUSTERS_0_ZOOKEEPER: zoo1:2181
       KAFKA_CLUSTERS_0_JMXPORT: 9997
-      KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://schema-registry:8081
-      KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME: connect
-      KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: http://kafka-connect:8083
+      # KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://schema-registry:8081
+      # KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME: connect
+      # KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: http://kafka-connect:8083
