@@ -1,4 +1,4 @@
-package kafka
+package event
 
 type SendOTPRequestMessage struct {
 	Email string
