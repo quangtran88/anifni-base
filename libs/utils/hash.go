@@ -10,7 +10,7 @@ type HashGenerator struct {
 var hashGenerator *HashGenerator
 
 func GetHashGenerator() *HashGenerator {
-	if randomGenerator == nil {
+	if hashGenerator == nil {
 		hashGenerator = &HashGenerator{}
 	}
 	return hashGenerator
