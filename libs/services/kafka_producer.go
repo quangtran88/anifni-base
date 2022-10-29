@@ -115,5 +115,5 @@ func (p KafkaProducer) serializeHeaders(messages ...kafka.Header) string {
 	for _, msg := range messages {
 		s = append(s, fmt.Sprintf("\"%s\" : \"%s\"", msg.Key, msg.Value))
 	}
-	return "{ " + strings.Join(s, ",") + " }"
+	return "{ " + strings.Join(s, ", ") + " }"
 }

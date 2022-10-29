@@ -50,7 +50,7 @@ func (c KafkaConsumer) consumeMessage(ctx context.Context, r *kafka.Reader, cons
 			log.Print(err)
 			break
 		}
-		log.Printf("Consume message %s", c.serializeMessage(msg))
+		log.Printf("Consume kafka message %s", c.serializeMessage(msg))
 		consumer(msg)
 	}
 
@@ -73,5 +73,5 @@ func (c KafkaConsumer) serializeHeaders(messages ...kafka.Header) string {
 	for _, msg := range messages {
 		s = append(s, fmt.Sprintf("\"%s\" : \"%s\"", msg.Key, msg.Value))
 	}
-	return "{ " + strings.Join(s, ",") + " }"
+	return "{ " + strings.Join(s, ", ") + " }"
 }
