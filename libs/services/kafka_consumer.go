@@ -4,13 +4,12 @@ import (
 	"context"
 	"fmt"
 	baseConstants "github.com/quangtran88/anifni-base/libs/constants"
+	basePorts "github.com/quangtran88/anifni-base/libs/ports"
 	baseUtils "github.com/quangtran88/anifni-base/libs/utils"
 	"github.com/segmentio/kafka-go"
 	"log"
 	"strings"
 )
-
-type Consumer func(message kafka.Message)
 
 type KafkaConsumer struct {
 	hosts []string
@@ -20,16 +19,16 @@ func NewKafkaConsumer() *KafkaConsumer {
 	env := baseUtils.GetEnvManager()
 	kafkaHostsEnv := env.GetEnv(baseConstants.KafkaHostEnvKey)
 	hosts := strings.Split(kafkaHostsEnv, ",")
-	log.Printf("Init Kafka Producer with hosts %s", hosts)
+	log.Printf("Init Kafka Consumer with hosts %s", hosts)
 	return &KafkaConsumer{hosts}
 }
 
-func (c KafkaConsumer) ConsumeAsync(topic string, group string, consumer Consumer) {
+func (c KafkaConsumer) ConsumeAsync(topic string, group string, consumer basePorts.ConsumerHandler) {
 	r := c.initReader(topic, group)
 	go c.consumeMessage(context.Background(), r, consumer)
 }
 
-func (c KafkaConsumer) Consume(topic string, group string, consumer Consumer) {
+func (c KafkaConsumer) Consume(topic string, group string, consumer basePorts.ConsumerHandler) {
 	r := c.initReader(topic, group)
 	c.consumeMessage(context.Background(), r, consumer)
 }
@@ -43,7 +42,7 @@ func (c KafkaConsumer) initReader(topic string, group string) *kafka.Reader {
 	})
 }
 
-func (c KafkaConsumer) consumeMessage(ctx context.Context, r *kafka.Reader, consumer Consumer) {
+func (c KafkaConsumer) consumeMessage(ctx context.Context, r *kafka.Reader, consumer basePorts.ConsumerHandler) {
 	for {
 		msg, err := r.ReadMessage(ctx)
 		if err != nil {
@@ -51,7 +50,10 @@ func (c KafkaConsumer) consumeMessage(ctx context.Context, r *kafka.Reader, cons
 			break
 		}
 		log.Printf("Consume kafka message %s", c.serializeMessage(msg))
-		consumer(msg)
+		consumer(basePorts.EventMessage{
+			Key:   string(msg.Key),
+			Value: string(msg.Value),
+		})
 	}
 
 	if err := r.Close(); err != nil {
