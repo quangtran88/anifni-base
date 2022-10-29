@@ -96,7 +96,7 @@ func (p KafkaProducer) createHeaders(ctx context.Context) []kafka.Header {
 	headers := make([]kafka.Header, 0)
 	headers = append(headers, kafka.Header{
 		Key:   "userId",
-		Value: []byte(ctx.Value(baseContext.UserIdKey).(string)),
+		Value: []byte(baseUtils.GetCtxStr(ctx, baseContext.UserIdKey)),
 	})
 	headers = append(headers, kafka.Header{
 		Key:   "traceId",
