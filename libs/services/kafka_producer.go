@@ -92,7 +92,7 @@ func (p KafkaProducer) initWriter(topic string) *kafka.Writer {
 func (p KafkaProducer) serializeMessages(messages ...kafka.Message) string {
 	s := make([]string, 0, len(messages))
 	for _, msg := range messages {
-		s = append(s, fmt.Sprintf("{ Key : %s, Value : %s }", msg.Key, msg.Value))
+		s = append(s, fmt.Sprintf("{ Key : \"%s\", Value : %s }", msg.Key, msg.Value))
 	}
 	return strings.Join(s, " ")
 }
@@ -105,7 +105,7 @@ func (p KafkaProducer) createHeaders(ctx context.Context) []kafka.Header {
 	})
 	headers = append(headers, kafka.Header{
 		Key:   "traceId",
-		Value: []byte(baseUtils.GetRandomGenerator().GetStr(20)),
+		Value: []byte(baseUtils.GetRandomGenerator().GetStr(32)),
 	})
 	return headers
 }
@@ -113,7 +113,7 @@ func (p KafkaProducer) createHeaders(ctx context.Context) []kafka.Header {
 func (p KafkaProducer) serializeHeaders(messages ...kafka.Header) string {
 	s := make([]string, 0, len(messages))
 	for _, msg := range messages {
-		s = append(s, fmt.Sprintf("%s : %s", msg.Key, msg.Value))
+		s = append(s, fmt.Sprintf("\"%s\" : \"%s\"", msg.Key, msg.Value))
 	}
 	return "{ " + strings.Join(s, ",") + " }"
 }
